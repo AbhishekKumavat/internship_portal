@@ -33,9 +33,17 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# Create upload directories
-os.makedirs('uploads/resumes', exist_ok=True)
-os.makedirs('uploads/profiles', exist_ok=True)
+# Create upload directories (only in development/non-Vercel environments)
+try:
+    if not os.getenv('VERCEL') and not os.getenv('NOW_REGION'):  # Vercel sets these env vars
+        os.makedirs('uploads/resumes', exist_ok=True)
+        os.makedirs('uploads/profiles', exist_ok=True)
+        print("Upload directories created successfully")
+    else:
+        print("Running on Vercel - skipping directory creation (read-only filesystem)")
+except Exception as e:
+    print(f"Warning: Could not create upload directories: {e}")
+    print("This is normal in serverless environments")
 
 from models import db
 
