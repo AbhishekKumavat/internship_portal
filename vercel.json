@@ -37,5 +37,11 @@
   "env": {
     "FLASK_ENV": "production",
     "DEBUG": "False"
+  },
+  "build": {
+    "env": {
+      "FLASK_ENV": "production",
+      "DEBUG": "False"
+    }
   }
 }

@@ -11,17 +11,19 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production')
-# PostgreSQL connection string
-# Format: postgresql://username:password@host:port/database
-DATABASE_USER = os.getenv('DATABASE_USER', 'postgres')
-DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', 'postgres')
-DATABASE_HOST = os.getenv('DATABASE_HOST', 'localhost')
-DATABASE_PORT = os.getenv('DATABASE_PORT', '5432')
-DATABASE_NAME = os.getenv('DATABASE_NAME', 'MyPortalDb')
-
-# Use PostgreSQL if DATABASE_URL is set, otherwise fall back to SQLite for development
+# Database configuration with fallbacks
 DATABASE_URL = os.getenv('DATABASE_URL')
-if not DATABASE_URL:
+
+if DATABASE_URL:
+    # Use provided DATABASE_URL
+    pass
+else:
+    # Fallback configuration
+    DATABASE_USER = os.getenv('DATABASE_USER', 'postgres')
+    DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', 'postgres')
+    DATABASE_HOST = os.getenv('DATABASE_HOST', 'localhost')
+    DATABASE_PORT = os.getenv('DATABASE_PORT', '5432')
+    DATABASE_NAME = os.getenv('DATABASE_NAME', 'MyPortalDb')
     DATABASE_URL = f'postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
@@ -118,6 +120,14 @@ def handle_disconnect():
     pass
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
+    try:
+        with app.app_context():
+            # Only create tables in development
+            if os.getenv('FLASK_ENV') != 'production':
+                db.create_all()
+                print("Database tables created successfully")
+    except Exception as e:
+        print(f"Warning: Could not initialize database: {e}")
+        print("This is normal in production environments without database access")
+    
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)
