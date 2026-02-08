@@ -13,7 +13,18 @@
           "templates/**",
           "static/**"
         ],
-        "buildCommand": "pip install --no-build-isolation -r requirements.txt"
+        "excludeFiles": [
+          "frontend/**",
+          "*.md",
+          "docs/**",
+          "tests/**",
+          "*.sql",
+          "Dockerfile*",
+          "docker-compose.yml",
+          "nginx.conf",
+          "render.yaml"
+        ],
+        "buildCommand": "pip install --no-build-isolation --no-cache-dir -r requirements.txt"
       }
     }
   ],

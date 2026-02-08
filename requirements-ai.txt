@@ -1,0 +1,4 @@
+# AI/ML dependencies - only install if you need AI features
+# These packages are heavy and increase deployment size significantly
+scikit-learn>=1.3.0
+scipy>=1.11.0
