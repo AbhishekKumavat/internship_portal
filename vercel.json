@@ -12,7 +12,8 @@
           "routes/**",
           "templates/**",
           "static/**"
-        ]
+        ],
+        "buildCommand": "pip install --no-build-isolation -r requirements.txt"
       }
     }
   ],
