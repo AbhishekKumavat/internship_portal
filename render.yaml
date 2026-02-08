@@ -1,0 +1,26 @@
+# render.yaml
+services:
+  - type: web
+    name: internship-portal
+    env: python
+    buildCommand: "pip install -r requirements.txt && cd frontend && npm install && npm run build"
+    startCommand: "python app.py"
+    envVars:
+      - key: DATABASE_USER
+        value: postgres
+      - key: DATABASE_PASSWORD
+        sync: false  # Will be set in Render dashboard
+      - key: DATABASE_HOST
+        sync: false  # Will be set in Render dashboard
+      - key: DATABASE_PORT
+        value: "5432"
+      - key: DATABASE_NAME
+        sync: false  # Will be set in Render dashboard
+      - key: SECRET_KEY
+        sync: false  # Will be set in Render dashboard
+      - key: JWT_SECRET_KEY
+        sync: false  # Will be set in Render dashboard
+      - key: FLASK_ENV
+        value: production
+      - key: DEBUG
+        value: "False"
